@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CrawlerAuth;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\TenantScope;
 use Illuminate\Foundation\Application;
@@ -19,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'tenant.scope' => TenantScope::class,
             'role' => EnsureRole::class,
+            'crawler.auth' => CrawlerAuth::class,
+        ]);
+
+        $middleware->api(prepend: [
+            TenantScope::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

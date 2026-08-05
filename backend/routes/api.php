@@ -2,15 +2,23 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CrawlerController;
+use App\Http\Controllers\IngestController;
 use App\Http\Controllers\KeywordController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SourceController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 
-Route::middleware(['auth:sanctum', 'tenant.scope'])->group(function () {
+Route::middleware('crawler.auth')->group(function () {
+    Route::post('/ingest/articles', [IngestController::class, 'store']);
+    Route::get('/crawler/keywords', [CrawlerController::class, 'keywords']);
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/auth/user', [AuthController::class, 'user']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
@@ -19,6 +27,8 @@ Route::middleware(['auth:sanctum', 'tenant.scope'])->group(function () {
     Route::get('/projects/{project}', [ProjectController::class, 'show']);
     Route::put('/projects/{project}', [ProjectController::class, 'update'])->middleware('role:admin,editor');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->middleware('role:admin');
+
+    Route::get('/sources', [SourceController::class, 'index']);
 
     Route::get('/projects/{project}/keywords', [KeywordController::class, 'index']);
     Route::post('/projects/{project}/keywords', [KeywordController::class, 'store'])->middleware('role:admin,editor');

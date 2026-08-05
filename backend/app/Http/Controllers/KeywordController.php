@@ -8,7 +8,6 @@ use App\Http\Resources\KeywordResource;
 use App\Models\Keyword;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class KeywordController extends Controller
 {

@@ -21,8 +21,8 @@ class ArticleService
             ->when($request->filled('search'), function ($q) use ($request) {
                 $search = $request->string('search')->toString();
                 $q->where(function ($inner) use ($search) {
-                    $inner->where('title', 'ilike', "%{$search}%")
-                        ->orWhere('content', 'ilike', "%{$search}%");
+                    $inner->whereRaw('lower(title) like lower(?)', ["%{$search}%"])
+                        ->orWhereRaw('lower(content) like lower(?)', ["%{$search}%"]);
                 });
             });
 

@@ -15,8 +15,8 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'source' => SourceResource::make($this->whenLoaded('source')),
-            'sentiment' => $analysis->sentiment ?? null,
-            'confidence' => $analysis->confidence !== null ? (float) $analysis->confidence : null,
+            'sentiment' => $analysis?->sentiment,
+            'confidence' => isset($analysis->confidence) ? (float) $analysis->confidence : null,
             'published_at' => $this->published_at,
             'url' => $this->url,
             'project' => $this->whenLoaded('project', fn () => [

@@ -40,4 +40,8 @@ return [
         'token' => env('PYTHON_API_TOKEN'),
     ],
 
+    'crawler' => [
+        'token' => env('CRAWLER_API_TOKEN'),
+    ],
+
 ];

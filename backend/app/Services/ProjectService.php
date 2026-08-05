@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Project;
 use App\Models\Keyword;
+use App\Models\Project;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 

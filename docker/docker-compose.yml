@@ -46,6 +46,9 @@ services:
       dockerfile: ../docker/Dockerfile.backend
     container_name: hoba-backend
     environment:
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_KEY: base64:vMYsDrKI/rwwylRbN/L6FjyiD30bvLwHysCxTnEFeHA=
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
@@ -53,11 +56,45 @@ services:
       DB_USERNAME: hoba
       DB_PASSWORD: hoba-secret
       REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_CLIENT: predis
       QUEUE_CONNECTION: redis
       CACHE_STORE: redis
       PYTHON_API_URL: http://python-api:8001
+      PHP_CLI_SERVER_WORKERS: "4"
     ports:
       - "8000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../backend:/var/www/html
+
+  worker:
+    image: hoba-backend
+    container_name: hoba-worker
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    command: ["sh", "-c", "php artisan queue:work redis --tries=3"]
+    environment:
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_KEY: base64:vMYsDrKI/rwwylRbN/L6FjyiD30bvLwHysCxTnEFeHA=
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: hoba
+      DB_USERNAME: hoba
+      DB_PASSWORD: hoba-secret
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_CLIENT: predis
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      PYTHON_API_URL: http://python-api:8001
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,6 +108,8 @@ services:
       context: ../python-api
       dockerfile: Dockerfile
     container_name: hoba-python-api
+    environment:
+      PORT: "8001"
     ports:
       - "8001:8001"
 
@@ -78,6 +117,8 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /api
     container_name: hoba-frontend
     ports:
       - "3000:3000"

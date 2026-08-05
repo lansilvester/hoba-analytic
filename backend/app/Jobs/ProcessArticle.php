@@ -35,7 +35,10 @@ class ProcessArticle implements ShouldQueue
             ->timeout(30)
             ->post('/analyze', [
                 'article_id' => $this->article->id,
-                'text' => $this->article->content ?? $this->article->title,
+                'title' => $this->article->title,
+                'content' => $this->article->content ?? '',
+                'source' => $this->article->source?->name,
+                'published_at' => $this->article->published_at?->toIso8601String(),
             ]);
 
         $response->throw();
