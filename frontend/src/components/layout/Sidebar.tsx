@@ -16,6 +16,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const user = getUser<User>();
+  const nav = user?.role === "admin" ? [...NAV, { href: "/users", label: "Pengguna" }] : NAV;
 
   const logout = async () => {
     try {
@@ -40,7 +41,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
-        {NAV.map((item) => {
+        {nav.map((item) => {
           const active = pathname.startsWith(item.href);
           return (
             <Link

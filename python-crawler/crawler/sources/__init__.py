@@ -1,3 +1,6 @@
+from crawler.collectors.instagram import InstagramCollector
+from crawler.collectors.twitter import TwitterCollector
+from crawler.collectors.youtube import YouTubeCollector
 from crawler.sources.antara import AntaraCollector
 from crawler.sources.detik import DetikCollector
 from crawler.sources.kompas import KompasCollector
@@ -8,6 +11,10 @@ SOURCE_REGISTRY: dict[str, type] = {
     "detik": DetikCollector,
     "tempo": TempoCollector,
     "antara": AntaraCollector,
+    "twitter": TwitterCollector,
+    "x": TwitterCollector,
+    "youtube": YouTubeCollector,
+    "instagram": InstagramCollector,
 }
 
 
@@ -17,4 +24,11 @@ def get_collector(source_key: str):
 
 
 def all_collectors() -> list:
-    return [collector_cls() for collector_cls in SOURCE_REGISTRY.values()]
+    seen: set[type] = set()
+    collectors = []
+    for collector_cls in SOURCE_REGISTRY.values():
+        if collector_cls in seen:
+            continue
+        seen.add(collector_cls)
+        collectors.append(collector_cls())
+    return collectors

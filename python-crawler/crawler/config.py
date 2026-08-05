@@ -37,8 +37,12 @@ class Settings:
             backend_api_url=os.getenv("BACKEND_API_URL", "http://127.0.0.1:8000/api"),
             crawler_token=os.getenv("CRAWLER_API_TOKEN", ""),
             source_timeout=int(os.getenv("SOURCE_TIMEOUT_SECONDS", "15")),
-            user_agent=os.getenv("USER_AGENT", "Mozilla/5.0 (compatible; PixelJoyCrawler/0.1)"),
-            scheduler_interval_minutes=int(os.getenv("SCHEDULER_INTERVAL_MINUTES", "30")),
+            user_agent=os.getenv(
+                "USER_AGENT", "Mozilla/5.0 (compatible; PixelJoyCrawler/0.1)"
+            ),
+            scheduler_interval_minutes=int(
+                os.getenv("SCHEDULER_INTERVAL_MINUTES", "30")
+            ),
             max_articles_per_source=int(os.getenv("MAX_ARTICLES_PER_SOURCE", "25")),
             apify_token=os.getenv("APIFY_TOKEN", ""),
             apify_timeout_minutes=int(os.getenv("APIFY_TIMEOUT_MINUTES", "15")),
@@ -47,10 +51,17 @@ class Settings:
             twitter_language=os.getenv("TWITTER_LANGUAGE", "id"),
             youtube_actor_id=os.getenv("YOUTUBE_ACTOR_ID", "apify/youtube-scraper"),
             youtube_max_videos=int(os.getenv("YOUTUBE_MAX_VIDEOS", "50")),
-            youtube_comments_max_per_video=int(os.getenv("YOUTUBE_COMMENTS_MAX_PER_VIDEO", "20")),
-            instagram_actor_id=os.getenv("INSTAGRAM_ACTOR_ID", "apify/instagram-hashtag-scraper"),
+            youtube_comments_max_per_video=int(
+                os.getenv("YOUTUBE_COMMENTS_MAX_PER_VIDEO", "20")
+            ),
+            instagram_actor_id=os.getenv(
+                "INSTAGRAM_ACTOR_ID", "apify/instagram-hashtag-scraper"
+            ),
             instagram_max_items=int(os.getenv("INSTAGRAM_MAX_ITEMS", "100")),
-            instagram_scrape_comments=os.getenv("INSTAGRAM_SCRAPE_COMMENTS", "true").lower() in ("1", "true", "yes"),
+            instagram_scrape_comments=os.getenv(
+                "INSTAGRAM_SCRAPE_COMMENTS", "true"
+            ).lower()
+            in ("1", "true", "yes"),
             instagram_username=os.getenv("INSTAGRAM_USERNAME", ""),
             instagram_password=os.getenv("INSTAGRAM_PASSWORD", ""),
         )

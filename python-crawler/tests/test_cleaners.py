@@ -18,7 +18,9 @@ def test_strip_html_handles_entities():
 
 def test_spam_detection():
     assert is_spam_or_promo("Diskon besar", "Beli sekarang juga, ini iklan")
-    assert not is_spam_or_promo("Pertumbuhan ekonomi", "Data BPS menunjukkan pertumbuhan")
+    assert not is_spam_or_promo(
+        "Pertumbuhan ekonomi", "Data BPS menunjukkan pertumbuhan"
+    )
 
 
 def test_normalize_url_strips_query_and_fragment():

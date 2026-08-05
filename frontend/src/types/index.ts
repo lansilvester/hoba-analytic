@@ -3,7 +3,21 @@ export interface User {
   name: string;
   email: string;
   role: string | null;
+  role_id: number | null;
   tenant_id: number | null;
+  tenant?: { id: number; name: string } | null;
+  is_active?: boolean;
+  created_at?: string;
+}
+
+export interface Role {
+  id: number;
+  name: string;
+}
+
+export interface Tenant {
+  id: number;
+  name: string;
 }
 
 export interface LoginResponse {

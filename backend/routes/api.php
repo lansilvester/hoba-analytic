@@ -7,7 +7,10 @@ use App\Http\Controllers\IngestController;
 use App\Http\Controllers\KeywordController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SourceController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -29,6 +32,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->middleware('role:admin');
 
     Route::get('/sources', [SourceController::class, 'index']);
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::get('/users/{user}', [UserController::class, 'show']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
+        Route::get('/roles', [RoleController::class, 'index']);
+        Route::get('/tenants', [TenantController::class, 'index']);
+    });
 
     Route::get('/projects/{project}/keywords', [KeywordController::class, 'index']);
     Route::post('/projects/{project}/keywords', [KeywordController::class, 'store'])->middleware('role:admin,editor');

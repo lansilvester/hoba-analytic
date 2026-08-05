@@ -19,11 +19,21 @@ class RSSCollector(Collector):
         self.source_name = source_name
         self.feed_url = feed_url
 
-    def collect(self) -> list[RawArticle]:
+    def collect(
+        self,
+        keywords: list[str] | None = None,
+        since: datetime | None = None,
+        until: datetime | None = None,
+    ) -> list[RawArticle]:
         settings = get_settings()
         headers = {"User-Agent": settings.user_agent}
         try:
-            response = httpx.get(self.feed_url, headers=headers, timeout=settings.source_timeout, follow_redirects=True)
+            response = httpx.get(
+                self.feed_url,
+                headers=headers,
+                timeout=settings.source_timeout,
+                follow_redirects=True,
+            )
             response.raise_for_status()
             parsed = feedparser.parse(response.content)
         except httpx.HTTPError as exc:
@@ -37,8 +47,16 @@ class RSSCollector(Collector):
             summary = entry.get("summary") or entry.get("description") or ""
             if not title or not link:
                 continue
-            published_struct = entry.get("published_parsed") or entry.get("updated_parsed")
-            published = datetime.fromtimestamp(mktime(published_struct), tz=timezone.utc) if published_struct else None
+            published_struct = entry.get("published_parsed") or entry.get(
+                "updated_parsed"
+            )
+            published = (
+                datetime.fromtimestamp(mktime(published_struct), tz=timezone.utc)
+                if published_struct
+                else None
+            )
+            if not self._within_period(published, since, until):
+                continue
             articles.append(
                 RawArticle(
                     source=self.source_name,
@@ -46,6 +64,19 @@ class RSSCollector(Collector):
                     url=link,
                     content=summary,
                     published_at=published,
+                    type="news",
                 )
             )
         return articles
+
+    @staticmethod
+    def _within_period(
+        published: datetime | None,
+        since: datetime | None,
+        until: datetime | None,
+    ) -> bool:
+        if published is None:
+            return True
+        return not (since is not None and published < since) and not (
+            until is not None and published > until
+        )

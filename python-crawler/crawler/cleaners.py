@@ -25,12 +25,23 @@ def html_unescape_entities(text: str) -> str:
 
 def is_spam_or_promo(title: str, content: str) -> bool:
     lowered = f"{title} {content}".lower()
-    spam_markers = ("iklan", "sponsored", "promosi", "langganan", "berlangganan", "buletin")
+    spam_markers = (
+        "iklan",
+        "sponsored",
+        "promosi",
+        "langganan",
+        "berlangganan",
+        "buletin",
+    )
     return any(marker in lowered for marker in spam_markers)
 
 
 def normalize_url(url: str) -> str:
     parsed = urlparse(url)
+    host = parsed.hostname or ""
+    if host == "youtu.be" or "youtube.com" in host:
+        query = f"?{parsed.query}" if parsed.query else ""
+        return f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/") + query
     return f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/")
 
 

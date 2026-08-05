@@ -24,6 +24,11 @@ test.describe("Pixel Joy Analytic - E2E flow", () => {
     await page.getByRole("link", { name: "Laporan" }).click();
     await expect(page).toHaveURL(/\/reports/);
     await expect(page.getByRole("heading", { name: "Laporan" })).toBeVisible();
+
+    await page.getByRole("link", { name: "Pengguna" }).click();
+    await expect(page).toHaveURL(/\/users/);
+    await expect(page.getByRole("heading", { name: "Pengguna" })).toBeVisible();
+    await expect(page.getByText("admin@hoba.test")).toBeVisible();
   });
 
   test("login dengan kredensial salah menampilkan error", async ({ page }) => {
