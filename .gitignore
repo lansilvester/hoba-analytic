@@ -1,0 +1,34 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PHP / Laravel
+/vendor
+*/vendor
+*.log
+storage/*.key
+.phpunit.cache
+.phpunit.result.cache
+
+# Node
+/node_modules
+*/node_modules
+/public/build
+/public/hot
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env/python
+
+# IDEs & editors
+.idea/
+.vscode/
+*.swp
